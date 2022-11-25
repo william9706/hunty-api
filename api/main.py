@@ -1,18 +1,24 @@
+#fast API
 from fastapi import FastAPI, HTTPException
+import uvicorn
+
+#python
 from datetime import datetime
 from uuid import uuid4 as uuid
-import uvicorn
+
 #models
-from models.vacante import Vacante
-from models.usuario import Usuario
+from models.vacante import Vacantes
+from models.usuario import Usuarios
+from models.empresas import Empresas
+
 
 app = FastAPI()
 
 vacantes = []
-
 usuarios = []
+empresas = []
 
-
+##### VACANTES ######
 @app.get('/')
 def index():
     return {"welcome":"Bienvenido a la api de hunty"}
@@ -25,7 +31,7 @@ def get_vacantes():
     return vacantes
 
 @app.post('/vacantes')
-def save_vacante(vacante: Vacante):
+def save_vacante(vacante: Vacantes):
     """ 
     Función para guardar vacantes en el arreglo vacantes.
     @param vacante: objeto vacante de tipo Vacante
@@ -35,21 +41,6 @@ def save_vacante(vacante: Vacante):
     vacante.VacancyId = str(uuid())
     vacantes.append(vacante.dict())
     return vacantes[-1]
-
-@app.get('/vacantes/{vacante_id}')
-def get_vacante(vacante_id: str):
-    """ 
-    Función para traer listar un solo objeto por id de vacante..
-    @param vacante_id: uuid de una vacante
-    """
-    for vacante in vacantes:
-        if  vacante['VacancyId'] == vacante_id:
-                return vacante
-
-    raise HTTPException(
-        status_code=404, 
-        detail="La vacante no existe."
-    )
 
 @app.delete('/vacantes/{vacante_id}')
 def delete_vacante(vacante_id: str):
@@ -71,7 +62,7 @@ def delete_vacante(vacante_id: str):
     )
 
 @app.put('/vacantes/{vacante_id}')
-def update_vacante(vacante_id: str, updatedVacante: Vacante):
+def update_vacante(vacante_id: str, updatedVacante: Vacantes):
     """
     Función para actualizar una vacante.
     @param vacante_id: uuid de una vacante
@@ -94,7 +85,8 @@ def update_vacante(vacante_id: str, updatedVacante: Vacante):
         detail="No se pudo actualizar la vacante."
     )
 
-    
+
+##### USUARIOS ###### 
 @app.get('/usuarios')
 def get_usuarios():
     """
@@ -103,7 +95,7 @@ def get_usuarios():
     return usuarios
 
 @app.post('/usuarios')
-def save_usuario(usuario: Usuario):
+def save_usuario(usuario: Usuarios):
     """ 
     Función para guardar usuarios en el arreglo usuarios.
     @param usuario: objeto usuario de tipo Usuario
@@ -111,23 +103,8 @@ def save_usuario(usuario: Usuario):
     @rtype: dict
     """
     usuario.UserId = str(uuid())
-    usuarios.append(usuarios.dict())
+    usuarios.append(usuario.dict())
     return usuarios[-1]
-
-@app.get('/usuarios/{usuario_id}')
-def get_usuario(usuario_id: str):
-    """ 
-    Función para listar un solo objeto por id de usuario.
-    @param usuario_id: uuid de un usuario
-    """
-    for usuario in usuarios:
-        if  usuario['UserId'] == usuario_id:
-                return usuario
-
-    raise HTTPException(
-        status_code=404, 
-        detail="El usuario no existe."
-    )
 
 @app.delete('/usuarios/{usuario_id}')
 def delete_usuario(usuario_id: str):
@@ -149,7 +126,7 @@ def delete_usuario(usuario_id: str):
     )
 
 @app.put('/usuarios/{usuario_id}')
-def update_usuario(usuario_id: str, updatedUsuario: Usuario):
+def update_usuario(usuario_id: str, updatedUsuario: Usuarios):
     """
     Función para actualizar un usuario.
     @param usuario_id: uuid de un usuario
@@ -169,4 +146,67 @@ def update_usuario(usuario_id: str, updatedUsuario: Usuario):
     return HTTPException(
         status_code=404, 
         detail="No se pudo actualizar el usuario."
+    )
+
+
+##### EMPRESAS ######
+@app.get('/empresas')
+def get_empresas():
+    """
+    Fuinción para listar empresas.
+    """
+    return empresas
+
+@app.post('/empresas')
+def save_usuario(empresa: Empresas):
+    """ 
+    Función para guardar empresas en el arreglo empresas.
+    @param empresa: objeto empresa de tipo Empresa
+    @returns: retornar un json con los datos de la empresa creada
+    @rtype: json
+    """
+    empresa.Id = str(uuid())
+    empresas.append(empresa.dict())
+    return empresas[-1]
+
+@app.delete('/empresas/{empresa_id}')
+def delete_empresa(empresa_id: str):
+    """ 
+    Función para eliminar una empresa especifica.
+    @param empresa_id: uuid de una empresa
+    @returns: Respuesta de la api llamada.
+    """
+    for index, empresa in enumerate(empresas):
+        if  empresa['Id'] == empresa_id:
+                empresas.pop(index)
+                return {
+                    "message":"La empresa ha sido eliminada satisfactoriamente."
+                }
+
+    return HTTPException(
+        status_code=404, 
+        detail="No se pudo eliminar la empresa."
+    )
+
+@app.put('/empresas/{empresa_id}')
+def update_empresa(empresa_id: str, updatedEmpresa: Empresas):
+    """
+    Función para actualizar una empresa.
+    @param empresa_id: uuid de una empresa
+    @param updatedEmpresa: objeto empresa que se va a actualizar.
+    @return: Respuesta de la api llamada.
+    """
+    for index, empresa in enumerate(empresas):
+        if  empresa['Id'] == empresa_id:
+            empresas[index]['CompanyName'] = updatedEmpresa.CompanyName
+            empresas[index]['Sector'] = updatedEmpresa.Sector
+            empresas[index]['Email'] = updatedEmpresa.Email
+            empresas[index]['Web'] = updatedEmpresa.Web
+            empresas[index]['Employees'] = updatedEmpresa.Employees
+            return {
+                "message":"La empresa ha sido actualizada satisfactoriamente."
+            }
+    return HTTPException(
+        status_code=404, 
+        detail="No se pudo actualizar la empresa."
     )
