@@ -7,9 +7,7 @@ from datetime import datetime
 from uuid import uuid4 as uuid
 
 #models
-from models.vacante import Vacantes
-from models.usuario import Usuarios
-from models.empresas import Empresas
+from .models import Vacantes, Usuarios, Empresas
 
 
 app = FastAPI()
@@ -21,7 +19,7 @@ empresas = []
 ##### VACANTES ######
 @app.get('/')
 def index():
-    return {"welcome":"Bienvenido a la api de hunty"}
+    return {"message":"Bienvenido a la api de hunty"}
 
 @app.get('/vacantes')
 def get_vacantes():
@@ -53,7 +51,7 @@ def delete_vacante(vacante_id: str):
         if  vacante['VacancyId'] == vacante_id:
                 vacantes.pop(index)
                 return {
-                    "message":"La vacante ah sido eliminada satisfactoriamente."
+                    "message":"La vacante ha sido eliminada satisfactoriamente."
                 }
 
     return HTTPException(
@@ -78,7 +76,7 @@ def update_vacante(vacante_id: str, updatedVacante: Vacantes):
             vacantes[index]['VacancyLink'] = updatedVacante.VacancyLink
             vacantes[index]['RequiredSkills'] = updatedVacante.RequiredSkills
             return {
-                "message":"La vacante ah sido actualizada satisfactoriamente."
+                "message":"La vacante ha sido actualizada satisfactoriamente."
             }
     return HTTPException(
         status_code=404, 
