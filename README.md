@@ -17,7 +17,8 @@ This README would normally document whatever steps are necessary to get your app
 Contenedores
 - *app* - Aplicación en FastAPI no bd
 
-`docker compose`
+`Docker Compose version v2.10.2`
+`Docker version 20.10.18`
 
 
 La primera vez que se ejecuta el comando se construyen la imagene del contenedor a partir del template, el proceso tarda alrededor de 2 minutos.
