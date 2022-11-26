@@ -63,14 +63,14 @@ def get_vacantes():
     return vacantes
 
 @app.post('/vacantes')
-def save_vacante(vacante: Vacantes):
+def create_vacante(vacante: Vacantes):
     """ 
     Función para guardar vacantes en el arreglo vacantes.
     @param vacante: objeto vacante de tipo Vacante
     @returns: retornar un diccionario
     @rtype: dict
     """
-    vacante.VacancyId = str(uuid())
+    # vacante.VacancyId = str(uuid())
     vacantes.append(vacante.dict())
     return vacantes[-1]
 
@@ -85,12 +85,12 @@ def delete_vacante(vacante_id: str):
         if  vacante['VacancyId'] == vacante_id:
                 vacantes.pop(index)
                 return {
-                    "message":"La vacante ha sido eliminada satisfactoriamente."
+                    "message":"La vacante ha sido eliminada satisfactoriamente"
                 }
 
     return HTTPException(
         status_code=404, 
-        detail="No se pudo eliminar la vacante."
+        detail="No se pudo eliminar la vacante"
     )
 
 @app.put('/vacantes/{vacante_id}')
@@ -110,11 +110,11 @@ def update_vacante(vacante_id: str, updatedVacante: Vacantes):
             vacantes[index]['VacancyLink'] = updatedVacante.VacancyLink
             vacantes[index]['RequiredSkills'] = updatedVacante.RequiredSkills
             return {
-                "message":"La vacante ha sido actualizada satisfactoriamente."
+                "message":"La vacante ha sido actualizada satisfactoriamente"
             }
     return HTTPException(
         status_code=404, 
-        detail="No se pudo actualizar la vacante."
+        detail="No se pudo actualizar la vacante"
     )
 
 
@@ -134,7 +134,7 @@ def save_usuario(usuario: Usuarios):
     @returns: retornar un diccionario con el objeto de usuario que se agrega
     @rtype: dict
     """
-    usuario.UserId = str(uuid())
+    # usuario.UserId = str(uuid())
     usuarios.append(usuario.dict())
     return usuarios[-1]
 
@@ -149,12 +149,12 @@ def delete_usuario(usuario_id: str):
         if  usuario['UserId'] == usuario_id:
                 usuarios.pop(index)
                 return {
-                    "message":"El usuario ha sido eliminado satisfactoriamente."
+                    "message":"El usuario ha sido eliminado satisfactoriamente"
                 }
 
     return HTTPException(
         status_code=404, 
-        detail="No se pudo eliminar el usuario."
+        detail="No se pudo eliminar el usuario"
     )
 
 @app.put('/usuarios/{usuario_id}')
@@ -173,11 +173,11 @@ def update_usuario(usuario_id: str, updatedUsuario: Usuarios):
             usuarios[index]['YearsPreviousExperience'] = updatedUsuario.YearsPreviousExperience
             usuarios[index]['Skills'] = updatedUsuario.Skills
             return {
-                "message":"El usuario ha sido actualizado satisfactoriamente."
+                "message":"El usuario ha sido actualizado satisfactoriamente"
             }
     return HTTPException(
         status_code=404, 
-        detail="No se pudo actualizar el usuario."
+        detail="No se pudo actualizar el usuario"
     )
 
 
@@ -197,7 +197,7 @@ def save_usuario(empresa: Empresas):
     @returns: retornar un json con los datos de la empresa creada
     @rtype: json
     """
-    empresa.Id = str(uuid())
+    # empresa.Id = str(uuid())
     empresas.append(empresa.dict())
     return empresas[-1]
 
@@ -212,12 +212,12 @@ def delete_empresa(empresa_id: str):
         if  empresa['Id'] == empresa_id:
                 empresas.pop(index)
                 return {
-                    "message":"La empresa ha sido eliminada satisfactoriamente."
+                    "message":"La empresa ha sido eliminada satisfactoriamente"
                 }
 
     return HTTPException(
         status_code=404, 
-        detail="No se pudo eliminar la empresa."
+        detail="No se pudo eliminar la empresa"
     )
 
 @app.put('/empresas/{empresa_id}')
@@ -236,9 +236,9 @@ def update_empresa(empresa_id: str, updatedEmpresa: Empresas):
             empresas[index]['Web'] = updatedEmpresa.Web
             empresas[index]['Employees'] = updatedEmpresa.Employees
             return {
-                "message":"La empresa ha sido actualizada satisfactoriamente."
+                "message":"La empresa ha sido actualizada satisfactoriamente"
             }
     return HTTPException(
         status_code=404, 
-        detail="No se pudo actualizar la empresa."
+        detail="No se pudo actualizar la empresa"
     )
