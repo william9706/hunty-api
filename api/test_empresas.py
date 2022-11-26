@@ -1,7 +1,11 @@
+#fastapi
 from fastapi.testclient import TestClient
+from fastapi import status
+
 from .main import app
+
+#datos de prueba
 from .enums import data_empresa as data
-import json
 
 client = TestClient(app)
 
@@ -11,16 +15,16 @@ def test_create_company():
     una empresa satisfactoriamente. 
     """
     response = client.post("/empresas/", json=data)
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
     assert response.json() == data
 
-def test_get_all_companys():
+def test_get_all_company():
     """  
     Test para probar que
     se listen las empresas.
     """
     response = client.get("/empresas")
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
     assert data in response.json()
 
 def test_update_company_successful():
@@ -37,7 +41,7 @@ def test_update_company_successful():
         "Employees":300
         }
     )
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
     assert response.json() == {
         "message": "La empresa ha sido actualizada satisfactoriamente"
     }
@@ -50,7 +54,7 @@ def test_delete_company_successful():
     response = client.delete(
         '/empresas/f39d1342-8ddc-168g-s10f-24754283484a'
     )
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
     assert response.json() == {
         "message":"La empresa ha sido eliminada satisfactoriamente"
     }
@@ -71,7 +75,7 @@ def test_update_company__invalid_id():
         "Employees":150
         }
     )
-    assert response.json()['status_code'] == 404
+    assert response.json()['status_code'] == status.HTTP_404_NOT_FOUND
     assert response.json()['detail'] == "No se pudo actualizar la empresa"
     
 def test_delete_company__invalid_id():
@@ -81,5 +85,5 @@ def test_delete_company__invalid_id():
     y no permite eliminar la empresa.
     """
     response = client.delete('/empresas/f39d1342-8ddc-168g-s10f-24754283484a')
-    assert response.json()['status_code'] == 404
+    assert response.json()['status_code'] == status.HTTP_404_NOT_FOUND
     assert response.json()['detail'] == "No se pudo eliminar la empresa"

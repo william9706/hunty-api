@@ -1,5 +1,10 @@
+#fastapi
 from fastapi.testclient import TestClient
+from fastapi import status
+
 from .main import app
+
+#datos de prueba
 from .enums import data_usuario as data
 
 client = TestClient(app)
@@ -10,7 +15,7 @@ def test_create_user():
     satisfactoriamente. 
     """
     response = client.post("/usuarios/", json=data)
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
     assert response.json() == data
 
 def test_get_all_users():
@@ -19,7 +24,7 @@ def test_get_all_users():
     se listen los usuaior creados.
     """
     response = client.get("/usuarios")
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
     assert data in response.json()
 
 def test_update_user_successful():
@@ -43,7 +48,7 @@ def test_update_user_successful():
             ]
         }
     )
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
     assert response.json() == {
         "message": "El usuario ha sido actualizado satisfactoriamente"
     }
@@ -56,7 +61,7 @@ def test_delete_user_successful():
     response = client.delete(
         '/usuarios/a09f1400-7dcc-018f-a16f-94754083434a'
     )
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
     assert response.json() == {
         "message":"El usuario ha sido eliminado satisfactoriamente"
     }
@@ -84,7 +89,7 @@ def test_update_user__invalid_id():
             ]
         }
     )
-    assert response.json()['status_code'] == 404
+    assert response.json()['status_code'] == status.HTTP_404_NOT_FOUND
     assert response.json()['detail'] == "No se pudo actualizar el usuario"
     
 def test_delete_user__invalid_id():
@@ -94,5 +99,5 @@ def test_delete_user__invalid_id():
     y no permite eliminar el usuario.
     """
     response = client.delete('/usuarios/c09f1301-7dbb-494f-a16f-8888408343')
-    assert response.json()['status_code'] == 404
+    assert response.json()['status_code'] == status.HTTP_404_NOT_FOUND
     assert response.json()['detail'] == "No se pudo eliminar el usuario"

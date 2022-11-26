@@ -242,3 +242,23 @@ def update_empresa(empresa_id: str, updatedEmpresa: Empresas):
         status_code=404, 
         detail="No se pudo actualizar la empresa"
     )
+
+
+@app.post('/recomendar_vacantes')
+def recommended_vacancies(usuario: Usuarios):
+
+    comp_keys = [
+        'Python', 
+        'Java',
+        'NoSQL',
+        'SQL'
+    ] 
+    for index, vacante in enumerate(vacantes):
+        for skill_user, RequiredSkill in zip(
+            usuario.Skills, 
+            vacantes[index]['RequiredSkills']
+            ):
+            for key in comp_keys:
+                if skill_user.get(key) != RequiredSkill.get(key):
+                    pass
+                    #TODO: buscar una forma de que los keys del diccionario sklill_user.
